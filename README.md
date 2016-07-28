@@ -1,10 +1,10 @@
 # OpenStack HEAT for Netfloc
 
-This is an OpenStack HEAT plugin for the [SDK for SDN - Netfloc](http://icclab.github.io/netfloc/ "Netfloc's github page") in order to use the resources of its service funciton chaining (SFC) library. It contains ```netfloc.py``` to be copied in the heat plugins library and two yaml templates: ```create_sfc.yaml``` to create all the required OpenStack resources and a bascic SFC. ```delete_sfc.yaml``` is to delete a chain given its ID number.
+This is an OpenStack HEAT plugin for the [SDK for SDN - Netfloc](http://icclab.github.io/netfloc/ "Netfloc's github page") in order to use the resources of its service funciton chaining (SFC) library. It contains ```netfloc.py``` to be copied in the heat plugins library and two yaml templates: ```create_sfc.yaml``` to create all the required OpenStack resources for SFC (VNF VMs, networks, and ports) and two service chain examples. The example of service chain demo deployed in OpenStack testbed evnironment is included in the [T-Nova project repository] (https://github.com/T-NOVA/netfloc-demo).
 
 ## Prepare the plugin
 
-* Create a heat plugin directory under /usr/lib and copy inside the file netfloc.py (or place it alternatively under existing user-defined library):
+* Create a heat plugin directory under /usr/lib and copy inside the file ***netfloc.py*** (or place it alternatively under existing user-defined library):
 
 ```
 mkdir /usr/lib/heat
@@ -34,8 +34,7 @@ service openstack-heat-engine restart
 * Run ```heat resource-type-list``` and verify that the following two Netfloc resources show up:
 
 ```
-Netfloc::Chain::Create                   |
-Netfloc::Chain::Delete
+Netfloc::Service::Chain
 ```
 
 ## Test the service chain
@@ -43,11 +42,11 @@ Netfloc::Chain::Delete
 * Before creating a chain, Netfloc must be running in a clean OpenStack environment and a public network has to be manualy created with assigning its ID as a parameter in the ```create_sfc.yaml``` file. 
 
 * Once the setup is done and the chain is created:
-```heat-create -f create_sfc.yaml [name_of_stack]``` 
+```heat stack-create -f create_sfc.yaml [name_of_stack]``` 
 the chain ID is listed in the Outputs section of the Stack Overview. Verify that the traffic steering is correct (ex. tcpdump) inside the VNF and on the endpoints. 
 
 * To delete the chain run: 
-```heat-delete -f delete_sfc.yaml [name_of_stack]```
+```heat stack-delete [name_of_stack]```
 specifying in the template the ID of the chian to be deleted.
 
 * This is the output from the heat-engine log file:
